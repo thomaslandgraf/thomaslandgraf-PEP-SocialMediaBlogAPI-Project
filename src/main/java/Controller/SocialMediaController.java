@@ -156,7 +156,7 @@ public class SocialMediaController {
 
         if(rows != 0){
             context.status(200);
-            context.json(mapper.writeValueAsString(rows));
+            context.result(String.valueOf(rows));
         } else {
             context.status(400);
         }
