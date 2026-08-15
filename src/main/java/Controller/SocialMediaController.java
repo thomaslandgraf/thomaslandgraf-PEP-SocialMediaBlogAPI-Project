@@ -39,6 +39,9 @@ public class SocialMediaController {
         app.post("/login", this::postLoginHandler);
         app.post("/messages", this::postMessageHandler);
         app.get("/messages", this::getAllMessagesHandler);
+        app.get("/messages/{message_id}", this::getMessageById);
+        app.delete("/messages/{message_id}", this::deleteMessageById);
+        app.patch("messages/{message_id}", this::updateMessageById);
 
         return app;
     }
@@ -69,6 +72,7 @@ public class SocialMediaController {
             context.status(409);
             return;
         }
+
         Account addAccount = accountService.addAccount(account);
 
         if(addAccount != null){
@@ -113,5 +117,48 @@ public class SocialMediaController {
         List<Message> getAllMessages = messageService.getAllMessages();
         context.status(200);
         context.json(mapper.writeValueAsString(getAllMessages));
+    }
+
+    private void getMessageById(Context context) throws JsonProcessingException{
+        ObjectMapper mapper = new ObjectMapper();
+        int messageId = Integer.parseInt(context.pathParam("message_id"));
+
+        Message message = messageService.getMessageById(messageId);
+
+        context.status(200);
+
+        if(message != null){
+            context.json(mapper.writeValueAsString(message));
+        }  
+    }
+
+    private void deleteMessageById(Context context) throws JsonProcessingException {
+        ObjectMapper mapper = new ObjectMapper();
+        int message_id = Integer.parseInt(context.pathParam("message_id"));
+
+        Integer rows = messageService.deleteMessageById(message_id);
+
+        context.status(200);
+
+        if(rows == 1){
+            context.json(mapper.writeValueAsString(rows));
+        }
+    }
+
+    private void updateMessageById(Context context) throws JsonMappingException, JsonProcessingException{
+        ObjectMapper mapper = new ObjectMapper();
+        Message message = mapper.readValue(context.body(), Message.class);
+
+        int message_id = Integer.parseInt(context.pathParam("message_id"));
+
+        Integer rows = messageService.updateMessageById(message.getMessage_text(), message_id);
+
+        if(rows != 0){
+            context.status(200);
+            context.json(mapper.writeValueAsString(rows));
+        } else {
+            context.status(400);
+        }
+
     }
 }

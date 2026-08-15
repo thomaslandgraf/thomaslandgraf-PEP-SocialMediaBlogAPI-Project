@@ -3,6 +3,9 @@ package DAO;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+
+import static org.mockito.ArgumentMatchers.anyDouble;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -59,4 +62,82 @@ public class MessageDAO {
       return listOfMessages;
     }
   }
+
+  public Message getMessageById(int message_id){
+    Connection connection = ConnectionUtil.getConnection();
+
+    try {
+      String sql = "SELECT message_id, posted_by, message_text, time_posted_epoch FROM message WHERE message_id = ?;";
+      PreparedStatement preparedStatement = connection.prepareStatement(sql);
+
+      preparedStatement.setInt(1, message_id);
+
+      ResultSet resultSet = preparedStatement.executeQuery();
+
+      if(resultSet.next()){
+        return new Message(resultSet.getInt("message_id"), resultSet.getInt("posted_by"), resultSet.getString("message_text"), resultSet.getLong("time_posted_epoch"));
+      } else {
+        return null;
+      }
+    } catch (SQLException e) {
+      System.out.print(e.getMessage());
+      return null;
+    }
+  }
+
+  public Integer deleteMessageById(int message_id){
+    Connection connection = ConnectionUtil.getConnection();
+
+    try {
+      String sql = "DELETE FROM message WHERE message_id = ?;";
+      PreparedStatement preparedStatement = connection.prepareStatement(sql);
+
+      preparedStatement.setInt(1, message_id);
+      Integer affectedRows = preparedStatement.executeUpdate();
+
+      return affectedRows;
+
+    } catch (SQLException e) {
+      System.out.println(e.getMessage());
+      return 0;
+    }
+  }
+
+  public Integer updateMessageById(String message_text, int message_id){
+    Connection connection = ConnectionUtil.getConnection();
+
+    try {
+      String sql = "UPDATE message SET message_text = ? WHERE message_id = ?;";
+      PreparedStatement preparedStatement = connection.prepareStatement(sql);
+
+      preparedStatement.setString(1, message_text);
+      preparedStatement.setInt(2, message_id);
+      Integer affectedRows = preparedStatement.executeUpdate();
+
+      return affectedRows;
+
+    } catch (SQLException e) {
+      System.out.println(e.getMessage());
+      return 0;
+    }
+  }
+
+  public boolean messageExist(int message_id){
+    Connection connection = ConnectionUtil.getConnection();
+
+    try {
+      String sql = "SELECT * FROM message WHERE message_id = ?;";
+      PreparedStatement preparedStatement = connection.prepareStatement(sql);
+
+      preparedStatement.setInt(1, message_id);
+      ResultSet resultSet = preparedStatement.executeQuery();
+
+      return resultSet.next();
+
+    } catch (SQLException e) {
+        System.out.println(e.getMessage());
+        return false;
+    }
+  }
+
 }
