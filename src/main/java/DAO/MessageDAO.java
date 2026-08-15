@@ -127,14 +127,14 @@ public class MessageDAO {
     List<Message> messagesByUser = new ArrayList<>();
 
     try {
-      String sql = "SELECT message_text FROM message WHERE posted_by = ?;";
+      String sql = "SELECT message_id, posted_by, message_text, time_posted_epoch FROM message WHERE posted_by = ?;";
       PreparedStatement preparedStatement = connection.prepareStatement(sql);
 
       preparedStatement.setInt(1, posted_by);
       ResultSet resultSet = preparedStatement.executeQuery();
 
       while(resultSet.next()) {
-        messagesByUser.add(new Message(resultSet.getInt("message_id"), resultSet.getInt("posted_by"), resultSet.getString("message_text"), resultSet.getLong("time_posted_epoch")));
+        messagesByUser.add(new Message(resultSet.getInt("message_id"), posted_by, resultSet.getString("message_text"), resultSet.getLong("time_posted_epoch")));
       }
 
     } catch (SQLException e) {
