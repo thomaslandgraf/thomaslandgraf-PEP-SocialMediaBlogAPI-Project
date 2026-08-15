@@ -137,12 +137,12 @@ public class SocialMediaController {
         ObjectMapper mapper = new ObjectMapper();
         int message_id = Integer.parseInt(context.pathParam("message_id"));
 
-        Message messageToDelete = messageService.deleteMessageById(message_id);
+        Integer rows = messageService.deleteMessageById(message_id);
 
         context.status(200);
 
-        if(messageToDelete != null){
-            context.json(mapper.writeValueAsString(messageToDelete));
+        if(rows == 1){
+            context.json(mapper.writeValueAsString(rows));
         }
     }
 
