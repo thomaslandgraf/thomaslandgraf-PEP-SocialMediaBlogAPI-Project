@@ -162,10 +162,12 @@ public class SocialMediaController {
         }
     }
 
-    private void getMessagesByUserHandler(Context context){
+    private void getMessagesByUserHandler(Context context) throws JsonProcessingException{
         ObjectMapper mapper = new ObjectMapper();
         int posted_by = Integer.parseInt(context.pathParam("account_id"));
 
         List<Message> messagesByUser = messageService.getAllMessagesByUser(posted_by);
+        context.status(200);
+        context.json(mapper.writeValueAsString(messagesByUser));
     }
 }
