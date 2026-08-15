@@ -70,7 +70,7 @@ public class SocialMediaController {
         }
 
         if(accountService.usernameExists(account.getUsername())) {
-            context.status(409);
+            context.status(400);
             return;
         }
 
