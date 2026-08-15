@@ -152,11 +152,11 @@ public class SocialMediaController {
 
         int message_id = Integer.parseInt(context.pathParam("message_id"));
 
-        Integer rows = messageService.updateMessageById(message.getMessage_text(), message_id);
+        Message updatedMessage = messageService.updateMessageById(message.getMessage_text(), message_id);
 
-        if(rows != 0){
+        if(updatedMessage != null){
             context.status(200);
-            context.result(String.valueOf(rows));
+            context.json(mapper.writeValueAsString(updatedMessage));
         } else {
             context.status(400);
         }

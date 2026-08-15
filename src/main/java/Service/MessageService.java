@@ -51,16 +51,18 @@ public class MessageService {
   }
     
 
-  public Integer updateMessageById(String message_text, int message_id){
+  public Message updateMessageById(String message_text, int message_id){
     if(message_text == null || message_text.trim().isEmpty()){
-      return 0; 
+      return null; 
     }
 
     if(message_text.length() >= 255){
-      return 0;
+      return null;
     }
 
-    return messageDAO.updateMessageById(message_text, message_id);
+    messageDAO.updateMessageById(message_text, message_id);
+
+    return messageDAO.getMessageById(message_id);
   }
 
   public List<Message> getAllMessagesByUser(int posted_by){
