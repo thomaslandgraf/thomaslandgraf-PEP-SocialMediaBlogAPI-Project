@@ -18,7 +18,7 @@ public class AccountService {
     return accountDAO.usernameExists(username);
   }
 
-  public Account geAccoutByLogin(String username, String password){
+  public Account getAccoutByLogin(String username, String password){
     return accountDAO.getAccountByLogin(username, password);
   }
 

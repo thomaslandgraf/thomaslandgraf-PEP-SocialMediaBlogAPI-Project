@@ -50,6 +50,24 @@ public class AccountDAO {
     }
   }
 
+  public boolean accountExists(int id) {
+    Connection connection = ConnectionUtil.getConnection();
+
+    try {
+      String sql = "SELECT account_id FROM account WHERE account_id = ?;";
+      PreparedStatement preparedStatement = connection.prepareStatement(sql);
+
+      preparedStatement.setInt(1, id);
+      ResultSet resultSet = preparedStatement.executeQuery();
+
+      return resultSet.next();
+
+    } catch (SQLException e) {
+      System.out.println(e.getMessage());
+      return false;
+    }
+  }
+
   public Account getAccountByLogin(String username, String password){
     Connection connection = ConnectionUtil.getConnection();
 
