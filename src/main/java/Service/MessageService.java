@@ -51,12 +51,11 @@ public class MessageService {
     if(message_text.length() >= 255){
       return 0;
     }
-    
+
     return messageDAO.updateMessageById(message_text, message_id);
   }
 
-  public boolean messageExist(int message_id){
-    return messageDAO.messageExist(message_id);
+  public List<Message> getAllMessagesByUser(int posted_by){
+    return messageDAO.getAllMessegesByUser(posted_by);
   }
-
 }

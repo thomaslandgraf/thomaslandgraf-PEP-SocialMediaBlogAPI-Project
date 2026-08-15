@@ -39,9 +39,10 @@ public class SocialMediaController {
         app.post("/login", this::postLoginHandler);
         app.post("/messages", this::postMessageHandler);
         app.get("/messages", this::getAllMessagesHandler);
-        app.get("/messages/{message_id}", this::getMessageById);
-        app.delete("/messages/{message_id}", this::deleteMessageById);
-        app.patch("messages/{message_id}", this::updateMessageById);
+        app.get("/messages/{message_id}", this::getMessageByIdHandler);
+        app.delete("/messages/{message_id}", this::deleteMessageByIdHandler);
+        app.patch("messages/{message_id}", this::updateMessageByIdHandler);
+        app.get("/accounts/{account_id}/messages", this::getMessagesByUserHandler);
 
         return app;
     }
@@ -119,7 +120,7 @@ public class SocialMediaController {
         context.json(mapper.writeValueAsString(getAllMessages));
     }
 
-    private void getMessageById(Context context) throws JsonProcessingException{
+    private void getMessageByIdHandler(Context context) throws JsonProcessingException{
         ObjectMapper mapper = new ObjectMapper();
         int messageId = Integer.parseInt(context.pathParam("message_id"));
 
@@ -132,7 +133,7 @@ public class SocialMediaController {
         }  
     }
 
-    private void deleteMessageById(Context context) throws JsonProcessingException {
+    private void deleteMessageByIdHandler(Context context) throws JsonProcessingException {
         ObjectMapper mapper = new ObjectMapper();
         int message_id = Integer.parseInt(context.pathParam("message_id"));
 
@@ -145,7 +146,7 @@ public class SocialMediaController {
         }
     }
 
-    private void updateMessageById(Context context) throws JsonMappingException, JsonProcessingException{
+    private void updateMessageByIdHandler(Context context) throws JsonMappingException, JsonProcessingException{
         ObjectMapper mapper = new ObjectMapper();
         Message message = mapper.readValue(context.body(), Message.class);
 
@@ -159,6 +160,12 @@ public class SocialMediaController {
         } else {
             context.status(400);
         }
+    }
 
+    private void getMessagesByUserHandler(Context context){
+        ObjectMapper mapper = new ObjectMapper();
+        int posted_by = Integer.parseInt(context.pathParam("account_id"));
+
+        List<Message> messagesByUser = messageService.getAllMessagesByUser(posted_by);
     }
 }
