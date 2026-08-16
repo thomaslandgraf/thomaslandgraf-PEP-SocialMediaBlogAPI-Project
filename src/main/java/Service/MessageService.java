@@ -20,7 +20,7 @@ public class MessageService {
       return null;
     }
 
-    if(message.getMessage_text().length() >= 255){
+    if(message.getMessage_text().length() > 255){
       return null;
     }
 
@@ -56,7 +56,7 @@ public class MessageService {
       return null; 
     }
 
-    if(message_text.length() >= 255){
+    if(message_text.length() > 255){
       return null;
     }
 
